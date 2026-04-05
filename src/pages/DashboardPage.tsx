@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { employeeApi, configApi } from '../../api/employee'
-import EditModal from '../../components/EditModal/EditModal'
-import styles from './DashboardPage.module.css'
+import { employeeApi, configApi } from '../api/employee'
+import EditModal from '../components/EditModal/EditModal'
+import styles from '../../css/DashboardPage.module.css'
 
 interface FieldDetail {
   key: string

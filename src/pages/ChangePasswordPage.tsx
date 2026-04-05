@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { authApi } from '../../api/auth'
-import styles from './ChangePasswordPage.module.css'
+import { authApi } from '../api/auth'
+import styles from '../../css/ChangePasswordPage.module.css'
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/
 

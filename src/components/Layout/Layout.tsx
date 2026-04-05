@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { authApi } from '../../api/auth'
 import i18n from '../../i18n'
-import styles from './Layout.module.css'
+import styles from '../../css/Layout.module.css'
 
 const LANGS = [
   { code: 'vi', label: 'VI' },

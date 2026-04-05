@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { adminApi, lookupApi } from '../../api/employee'
-import styles from './LookupPage.module.css'
+import { adminApi, lookupApi } from '../api/employee'
+import styles from '../../css/LookupPage.module.css'
 
 interface CategoryPeriod {
   categoryId: number

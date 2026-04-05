@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { authApi } from '../../api/auth'
-import i18n from '../../i18n'
-import styles from './LoginPage.module.css'
+import { authApi } from '../api/auth'
+import i18n from '../i18n'
+import styles from '../../css/LoginPage.module.css'
 
 const LANGS = [
   { code: 'vi', label: 'Việt' },

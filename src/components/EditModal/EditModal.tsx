@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { employeeApi } from '../../api/employee'
-import styles from './EditModal.module.css'
+import styles from '../../css/EditModal.module.css'
 
 interface FieldDetail {
   key: string

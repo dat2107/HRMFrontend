@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
-import LoginPage from './pages/login/LoginPage'
-import ChangePasswordPage from './pages/change-password/ChangePasswordPage'
-import DashboardPage from './pages/dashboard/DashboardPage'
-import LookupPage from './pages/lookup/LookupPage'
-import AdminPage from './pages/admin/AdminPage'
+import LoginPage from './pages/LoginPage'
+import ChangePasswordPage from './pages/ChangePasswordPage'
+import DashboardPage from './pages/DashboardPage'
+import LookupPage from './pages/LookupPage'
+import AdminPage from './pages/AdminPage'
 
 function isAuthenticated() {
   return !!localStorage.getItem('hrm_token')

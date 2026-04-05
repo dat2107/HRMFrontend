@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { adminApi } from '../../api/employee'
-import styles from './AdminPage.module.css'
+import { adminApi } from '../api/employee'
+import styles from '../../css/AdminPage.module.css'
 
 interface UpdateRequest {
   id: number
