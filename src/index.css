@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #212529;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#234699] text-white font-semibold py-2.5 px-6 rounded-lg
+           hover:bg-[#2d5bbf] active:bg-[#1a3474]
+           transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+           cursor-pointer border-0 text-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-[#234699] border border-[#234699] font-semibold py-2.5 px-6 rounded-lg
+           hover:bg-blue-50 transition-colors duration-200 cursor-pointer text-sm;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white font-semibold py-2 px-4 rounded-lg
+           hover:bg-red-700 transition-colors duration-200 cursor-pointer text-sm border-0;
+  }
+
+  .btn-sm {
+    @apply py-1.5 px-3 text-xs;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+           focus:outline-none focus:ring-2 focus:ring-[#234699] focus:border-transparent
+           placeholder:text-gray-400 transition-all duration-200 bg-white;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+  }
+
+  .badge-pending {
+    @apply inline-flex items-center gap-1 text-xs font-medium
+           bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full px-2.5 py-0.5;
+  }
+
+  .badge-locked {
+    @apply inline-flex items-center gap-1 text-xs font-medium
+           bg-gray-100 text-gray-500 border border-gray-200 rounded-full px-2.5 py-0.5;
+  }
+}

@@ -1,0 +1,364 @@
+.pageTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pageTitle {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.uploadToggleBtn {
+  padding: 0.5rem 1rem;
+  background: #234699;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.uploadToggleBtn:hover {
+  background: #1a3474;
+}
+
+.uploadCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #bfdbfe;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.uploadCardHeader {
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 0.875rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #1e40af;
+}
+
+.uploadForm {
+  padding: 1.25rem;
+}
+
+.uploadRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.uploadGroup {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.uploadLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.fileInput {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.uploadFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.searchCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.searchRow {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.searchGroup {
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.resultsCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.resultsHeader {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resultsTitle {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #374151;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  background: #234699;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: #f9fafb;
+}
+
+.noData {
+  text-align: center;
+  padding: 3rem;
+  color: #9ca3af;
+  font-size: 0.9375rem;
+}
+
+.tableLoading {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 0.9375rem;
+}
+
+/* Sticky first column for large tables */
+.table th:first-child,
+.table td:first-child {
+  position: sticky;
+  left: 0;
+  background: inherit;
+  z-index: 1;
+}
+
+.table th:first-child {
+  background: #234699;
+  z-index: 2;
+}
+
+.table tr:hover td:first-child {
+  background: #f9fafb;
+}
+
+.feedbackCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feedbackStatus {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+.feedbackBtns {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.feedbackBtn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid;
+}
+
+.feedbackBtnConfirm {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.feedbackBtnConfirm:hover {
+  background: #dcfce7;
+}
+
+.feedbackBtnReject {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.feedbackBtnReject:hover {
+  background: #fee2e2;
+}
+
+/* Reject dialog */
+.rejectOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 1rem;
+}
+
+.rejectModal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.rejectTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #991b1b;
+  margin-bottom: 1rem;
+}
+
+.rejectTextarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.rejectTextarea:focus {
+  outline: none;
+  border-color: #234699;
+  box-shadow: 0 0 0 2px rgba(35,70,153,0.15);
+}
+
+.rejectFooter {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.optionLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* Key-value display */
+.kvCard {
+  padding: 0.75rem 1.25rem;
+}
+
+.kvRow {
+  display: flex;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 1rem;
+}
+
+.kvRow:last-child {
+  border-bottom: none;
+}
+
+.kvLabel {
+  flex: 0 0 220px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.kvValue {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #111827;
+  word-break: break-word;
+}
