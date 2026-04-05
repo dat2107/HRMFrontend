@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { authApi } from '../api/auth'
-import styles from '../../css/ChangePasswordPage.module.css'
-
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/
+import { useAuth } from '../contexts/AuthContext'
+import { PASSWORD_REGEX, ROUTES } from '../constants'
+import styles from '../css/ChangePasswordPage.module.css'
 
 export default function ChangePasswordPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { clearAuth } = useAuth()
   const [params] = useSearchParams()
   const isForced = params.get('force') === 'true'
 
@@ -38,10 +39,8 @@ export default function ChangePasswordPage() {
     setLoading(true)
     try {
       await authApi.changePassword({ oldPassword: oldPass, newPassword: newPass })
-      // Logout sau khi đổi mật khẩu
-      localStorage.removeItem('hrm_token')
-      localStorage.removeItem('hrm_user')
-      navigate('/login')
+      clearAuth()
+      navigate(ROUTES.LOGIN)
     } catch (err: any) {
       setError(err.response?.data?.message || t('common.error'))
     } finally {

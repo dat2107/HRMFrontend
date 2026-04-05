@@ -1,28 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { adminApi, lookupApi } from '../api/employee'
-import styles from '../../css/LookupPage.module.css'
-
-interface CategoryPeriod {
-  categoryId: number
-  period: string
-  feedbackType: string
-  customOptions: string
-  isPriority: boolean
-}
-
-interface FeedbackState {
-  [key: string]: { status: string; note: string }
-}
-
-const FEEDBACK_TYPES = ['NONE', 'CONFIRM', 'CUSTOM']
+import { useAuth } from '../contexts/AuthContext'
+import type { CategoryPeriod, FeedbackState } from '../types'
+import { FEEDBACK_TYPES } from '../constants'
+import styles from '../css/LookupPage.module.css'
 
 export default function LookupPage() {
   const { t } = useTranslation()
-
-  const userRaw = localStorage.getItem('hrm_user')
-  const currentUser = userRaw ? JSON.parse(userRaw) : null
-  const isAdmin = currentUser?.role === 'ADMIN'
+  const { isAdmin } = useAuth()
 
   const [categories, setCategories] = useState<Record<string, CategoryPeriod[]>>({})
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -37,11 +23,9 @@ export default function LookupPage() {
   const [selectedOption, setSelectedOption] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  // Excel data state
   const [tableData, setTableData] = useState<{ headers: string[]; rows: Record<string, string>[] } | null>(null)
   const [tableLoading, setTableLoading] = useState(false)
 
-  // Upload state (admin only)
   const [showUpload, setShowUpload] = useState(false)
   const [uploadCategoryName, setUploadCategoryName] = useState('')
   const [uploadPeriod, setUploadPeriod] = useState('')
@@ -81,7 +65,6 @@ export default function LookupPage() {
       await adminApi.uploadLookupFile(formData)
       alert(t('lookupUpload.success'))
 
-      // Reset form
       setUploadCategoryName('')
       setUploadPeriod('')
       setUploadFeedbackType('NONE')
@@ -91,7 +74,6 @@ export default function LookupPage() {
       if (fileInputRef.current) fileInputRef.current.value = ''
       setShowUpload(false)
 
-      // Reload categories
       loadCategories()
     } catch (err: any) {
       alert(err.response?.data?.message || t('common.error'))
@@ -124,9 +106,7 @@ export default function LookupPage() {
 
       if (dataRes.status === 'fulfilled') {
         const d = dataRes.value.data.data
-        if (d.headers && d.headers.length > 0) {
-          setTableData(d)
-        }
+        if (d.headers && d.headers.length > 0) setTableData(d)
       }
     } catch (err) {
       console.error(err)
@@ -221,11 +201,7 @@ export default function LookupPage() {
       return (
         <button
           className={`${styles.feedbackBtn} ${styles.feedbackBtnConfirm}`}
-          onClick={() => setOptionTarget({
-            categoryId: period.categoryId,
-            rowKey: String(period.categoryId),
-            options,
-          })}
+          onClick={() => setOptionTarget({ categoryId: period.categoryId, rowKey: String(period.categoryId), options })}
         >
           📋 {t('lookup.feedbackOption')}
         </button>
@@ -240,16 +216,12 @@ export default function LookupPage() {
       <div className={styles.pageTitleRow}>
         <h1 className={styles.pageTitle}>🔍 {t('lookup.title')}</h1>
         {isAdmin && (
-          <button
-            className={styles.uploadToggleBtn}
-            onClick={() => setShowUpload((v) => !v)}
-          >
+          <button className={styles.uploadToggleBtn} onClick={() => setShowUpload((v) => !v)}>
             📤 {t('lookupUpload.title')}
           </button>
         )}
       </div>
 
-      {/* Admin Upload Panel */}
       {isAdmin && showUpload && (
         <div className={styles.uploadCard}>
           <div className={styles.uploadCardHeader}>📤 {t('lookupUpload.title')}</div>
@@ -341,7 +313,6 @@ export default function LookupPage() {
         </div>
       )}
 
-      {/* Search Controls */}
       <div className={styles.searchCard}>
         <div className={styles.searchRow}>
           <div className={styles.searchGroup}>
@@ -373,17 +344,12 @@ export default function LookupPage() {
             </select>
           </div>
 
-          <button
-            className="btn-primary"
-            onClick={handleSearch}
-            disabled={!currentPeriod || loading}
-          >
+          <button className="btn-primary" onClick={handleSearch} disabled={!currentPeriod || loading}>
             {loading ? t('common.loading') : t('lookup.searchBtn')}
           </button>
         </div>
       </div>
 
-      {/* Results */}
       {currentPeriod && (
         <div className={styles.resultsCard}>
           <div className={styles.resultsHeader}>
@@ -393,11 +359,8 @@ export default function LookupPage() {
             {renderFeedbackControls(currentPeriod)}
           </div>
 
-          {loading && (
-            <div className={styles.tableLoading}>⏳ {t('common.loading')}</div>
-          )}
+          {loading && <div className={styles.tableLoading}>⏳ {t('common.loading')}</div>}
 
-          {/* Key-value rows */}
           {!loading && tableData && tableData.headers.length > 0 && (
             tableData.rows.length === 0 ? (
               <div className={styles.noData}>{t('lookup.noData')}</div>
@@ -415,13 +378,10 @@ export default function LookupPage() {
             )
           )}
 
-          {!loading && !tableData && (
-            <div className={styles.noData}>{t('lookup.noData')}</div>
-          )}
+          {!loading && !tableData && <div className={styles.noData}>{t('lookup.noData')}</div>}
         </div>
       )}
 
-      {/* Reject Dialog */}
       {rejectTarget && (
         <div className={styles.rejectOverlay}>
           <div className={styles.rejectModal}>
@@ -448,7 +408,6 @@ export default function LookupPage() {
         </div>
       )}
 
-      {/* Option Dialog */}
       {optionTarget && (
         <div className={styles.rejectOverlay}>
           <div className={styles.rejectModal}>

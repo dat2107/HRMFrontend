@@ -3,17 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '../api/auth'
 import i18n from '../i18n'
-import styles from '../../css/LoginPage.module.css'
-
-const LANGS = [
-  { code: 'vi', label: 'Việt' },
-  { code: 'en', label: 'EN' },
-  { code: 'jp', label: '日本語' },
-]
+import { useAuth } from '../contexts/AuthContext'
+import { LANGS, ROUTES } from '../constants'
+import styles from '../css/LoginPage.module.css'
 
 export default function LoginPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { setAuth } = useAuth()
 
   const [employeeId, setEmployeeId] = useState('')
   const [password, setPassword] = useState('')
@@ -48,13 +45,12 @@ export default function LoginPage() {
       const res = await authApi.login({ employeeId: cleanId, password })
       const { data } = res.data
 
-      localStorage.setItem('hrm_token', data.accessToken)
-      localStorage.setItem('hrm_user', JSON.stringify(data.employee))
+      setAuth(data.accessToken, data.employee)
 
       if (data.requireChangePassword) {
-        navigate('/change-password?force=true')
+        navigate(`${ROUTES.CHANGE_PASSWORD}?force=true`)
       } else {
-        navigate('/dashboard')
+        navigate(ROUTES.DASHBOARD)
       }
     } catch (err: any) {
       setError(err.response?.data?.message || t('common.error'))
@@ -204,7 +200,6 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* Language Switcher */}
           <div className={styles.langSwitcher}>
             {LANGS.map((l) => (
               <button

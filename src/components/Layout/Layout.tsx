@@ -2,26 +2,19 @@ import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { authApi } from '../../api/auth'
 import i18n from '../../i18n'
+import { useAuth } from '../../contexts/AuthContext'
+import { LANGS_SHORT, ROUTES } from '../../constants'
 import styles from '../../css/Layout.module.css'
-
-const LANGS = [
-  { code: 'vi', label: 'VI' },
-  { code: 'en', label: 'EN' },
-  { code: 'jp', label: 'JP' },
-]
 
 export default function Layout() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-
-  const userRaw = localStorage.getItem('hrm_user')
-  const user = userRaw ? JSON.parse(userRaw) : null
+  const { user, isAdmin, clearAuth } = useAuth()
 
   const handleLogout = async () => {
     try { await authApi.logout() } catch {}
-    localStorage.removeItem('hrm_token')
-    localStorage.removeItem('hrm_user')
-    navigate('/login')
+    clearAuth()
+    navigate(ROUTES.LOGIN)
   }
 
   const changeLang = (code: string) => {
@@ -31,7 +24,6 @@ export default function Layout() {
 
   return (
     <div className={styles.root}>
-      {/* Top navbar */}
       <nav className={styles.navbar}>
         <div className={styles.navBrand}>🏢 {t('login.title')}</div>
         <div className={styles.navRight}>
@@ -41,7 +33,7 @@ export default function Layout() {
             </span>
           )}
           <div className={styles.langGroup}>
-            {LANGS.map((l) => (
+            {LANGS_SHORT.map((l) => (
               <button
                 key={l.code}
                 className={`${styles.langBtn} ${i18n.language === l.code ? styles.langBtnActive : ''}`}
@@ -51,7 +43,7 @@ export default function Layout() {
               </button>
             ))}
           </div>
-          <button className={styles.navBtn} onClick={() => navigate('/change-password')}>
+          <button className={styles.navBtn} onClick={() => navigate(ROUTES.CHANGE_PASSWORD)}>
             🔑 {t('nav.changePassword')}
           </button>
           <button className={styles.navBtn} onClick={handleLogout}>
@@ -61,12 +53,11 @@ export default function Layout() {
       </nav>
 
       <div className={styles.main}>
-        {/* Sidebar */}
         <aside className={styles.sidebar}>
           <ul className={styles.sideNav}>
             <li className={styles.sideNavItem}>
               <NavLink
-                to="/dashboard"
+                to={ROUTES.DASHBOARD}
                 className={({ isActive }) =>
                   `${styles.sideNavLink} ${isActive ? styles.sideNavLinkActive : ''}`
                 }
@@ -77,7 +68,7 @@ export default function Layout() {
             </li>
             <li className={styles.sideNavItem}>
               <NavLink
-                to="/lookup"
+                to={ROUTES.LOOKUP}
                 className={({ isActive }) =>
                   `${styles.sideNavLink} ${isActive ? styles.sideNavLinkActive : ''}`
                 }
@@ -86,10 +77,10 @@ export default function Layout() {
                 {t('nav.lookup')}
               </NavLink>
             </li>
-            {user?.role === 'ADMIN' && (
+            {isAdmin && (
               <li className={styles.sideNavItem}>
                 <NavLink
-                  to="/admin"
+                  to={ROUTES.ADMIN}
                   className={({ isActive }) =>
                     `${styles.sideNavLink} ${isActive ? styles.sideNavLinkActive : ''}`
                   }
@@ -102,7 +93,6 @@ export default function Layout() {
           </ul>
         </aside>
 
-        {/* Page content */}
         <main className={styles.content}>
           <Outlet />
         </main>

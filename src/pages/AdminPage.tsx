@@ -1,23 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { adminApi } from '../api/employee'
-import styles from '../../css/AdminPage.module.css'
-
-interface UpdateRequest {
-  id: number
-  employeeId: string
-  employeeName: string
-  fieldLabel: string
-  oldValue: string
-  newValue: string
-  fileUrl: string
-  status: 'PENDING' | 'APPROVED' | 'REJECTED'
-  adminNote: string
-  reviewedAt: string
-  createdAt: string
-}
-
-const STATUS_FILTERS = ['PENDING', 'ALL', 'APPROVED', 'REJECTED'] as const
+import type { UpdateRequest } from '../types'
+import { STATUS_FILTERS } from '../constants'
+import styles from '../css/AdminPage.module.css'
 
 export default function AdminPage() {
   const { t } = useTranslation()
@@ -101,7 +87,6 @@ export default function AdminPage() {
     <div>
       <h1 className={styles.pageTitle}>📋 {t('admin.title')}</h1>
 
-      {/* Filter tabs */}
       <div className={styles.filterBar}>
         {STATUS_FILTERS.map((f) => (
           <button
@@ -188,7 +173,6 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Reject Modal */}
       {rejectModal && (
         <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && setRejectModal(null)}>
           <div className={styles.modal}>

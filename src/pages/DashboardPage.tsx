@@ -2,32 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { employeeApi, configApi } from '../api/employee'
 import EditModal from '../components/EditModal/EditModal'
-import styles from '../../css/DashboardPage.module.css'
-
-interface FieldDetail {
-  key: string
-  label: string
-  value: string
-  rawValue: string
-  editable: boolean
-  inputType: string
-  pending: boolean
-  pendingVal: string
-}
-
-interface Profile {
-  baseInfo: { id: string; fullName: string; department: string; positionCode: string; email: string }
-  details: FieldDetail[]
-  hasPending: boolean
-  confirmStatus: { globalActive: boolean; userConfirmed: boolean; confirmedAt: string; hasPending: boolean }
-}
-
-// helper type for configs coming from backend
-interface FieldConfig {
-  fieldName: string
-  isOptionalUpload?: boolean
-  // add other properties if backend adds more fields
-}
+import type { FieldDetail, Profile, FieldConfig } from '../types'
+import styles from '../css/DashboardPage.module.css'
 
 export default function DashboardPage() {
   const { t } = useTranslation()
@@ -57,18 +33,12 @@ export default function DashboardPage() {
       setDropdowns(dropdownRes.data.data)
       setFieldConfigs(fieldsRes.data.data)
     } catch (err: unknown) {
-      // use a narrow shape for axios-like errors
       const e = err as { response?: { data?: any; status?: number } }
-      console.error("Chi tiết lỗi:", e.response?.data)
-      // Nếu lỗi 401 hoặc 500 liên quan đến auth, có thể đẩy ra trang login
-      if (e.response?.status === 401 || e.response?.status === 500) {
-        // window.location.href = '/login';
-      }
+      console.error('Chi tiết lỗi:', e.response?.data)
     } finally {
       setLoading(false)
     }
 
-    // Load address config riêng — không để lỗi này kéo sập cả trang
     try {
       const addressRes = await configApi.getAddress()
       setAddressConfig(addressRes.data.data)
@@ -86,7 +56,7 @@ export default function DashboardPage() {
         hasPending: true,
         details: prev.details.map((d) =>
           d.label === fieldLabel
-            ? { ...d, pending: true, pendingVal: newVal }
+            ? { ...d, isPending: true, pendingVal: newVal }
             : d
         ),
         confirmStatus: { ...prev.confirmStatus, hasPending: true },
@@ -124,9 +94,7 @@ export default function DashboardPage() {
   }
 
   const getDropdownOptions = (field: FieldDetail): string[] => {
-    if (PROVINCE_KEYS.includes(field.key)) {
-      return Object.keys(addressConfig)
-    }
+    if (PROVINCE_KEYS.includes(field.key)) return Object.keys(addressConfig)
     if (field.key in DISTRICT_PROVINCE_MAP) {
       const provinceKey = DISTRICT_PROVINCE_MAP[field.key]
       const provinceField = profile?.details.find((d) => d.key === provinceKey)
@@ -150,7 +118,6 @@ export default function DashboardPage() {
     <div>
       <h1 className={styles.pageTitle}>👤 {t('profile.title')}</h1>
 
-      {/* Base Info Card */}
       <div className={styles.baseInfoCard}>
         <div className={styles.avatar}>👤</div>
         <div className={styles.baseInfoText}>
@@ -160,14 +127,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Field Details */}
       <div className={styles.sectionCard}>
         <div className={styles.sectionHeader}>📋 {t('profile.title')}</div>
         {details.map((field) => (
           <div key={field.key} className={styles.infoItem}>
             <div className={styles.infoLabel}>{field.label}</div>
             <div className={styles.infoValue}>
-              {field.pending ? (
+              {field.isPending ? (
                 <div className={styles.pendingValue}>
                   <span className={styles.oldVal}>{field.value || '—'}</span>
                   <span className={styles.newVal}>→ {field.pendingVal}</span>
@@ -180,7 +146,7 @@ export default function DashboardPage() {
             <div>
               {!field.editable ? (
                 <span className="badge-locked">🔒 {t('profile.lockedBadge')}</span>
-              ) : field.pending ? (
+              ) : field.isPending ? (
                 <span className="badge-pending">🕐 {t('profile.pendingBadge')}</span>
               ) : (
                 <button
@@ -196,7 +162,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Confirm Section */}
       {confirmStatus.globalActive && (
         <div className={styles.confirmCard}>
           <div className={styles.confirmTitle}>✅ {t('profile.confirmSection')}</div>
@@ -229,7 +194,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Edit Modal */}
       {editField && (
         <EditModal
           field={editField}

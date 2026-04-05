@@ -1,17 +1,9 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { employeeApi } from '../../api/employee'
+import type { FieldDetail } from '../../types'
+import { MAX_FILE_SIZE, ALLOWED_MIME } from '../../constants'
 import styles from '../../css/EditModal.module.css'
-
-interface FieldDetail {
-  key: string
-  label: string
-  value: string
-  rawValue: string
-  inputType: string
-  isPending: boolean
-  pendingVal: string
-}
 
 interface Props {
   field: FieldDetail
@@ -20,9 +12,6 @@ interface Props {
   onSuccess: (fieldLabel: string, newVal: string) => void
   isOptionalUpload?: boolean
 }
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024
-const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf']
 
 export default function EditModal({
   field, dropdownOptions, onClose, onSuccess, isOptionalUpload = false
@@ -47,7 +36,7 @@ export default function EditModal({
       e.target.value = ''
       return
     }
-    if (!ALLOWED_MIME.includes(file.type)) {
+    if (!ALLOWED_MIME.includes(file.type as typeof ALLOWED_MIME[number])) {
       setError(t('editModal.fileHint'))
       e.target.value = ''
       return
