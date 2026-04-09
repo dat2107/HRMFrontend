@@ -142,6 +142,7 @@ const en = {
     no: 'No',
     search: 'Search',
     noResult: 'No results',
+    optional: 'Optional',
   },
   language: {
     vi: 'Tiếng Việt',
