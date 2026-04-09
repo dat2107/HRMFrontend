@@ -6,26 +6,38 @@ import { MAX_FILE_SIZE, ALLOWED_MIME } from '../../constants'
 import styles from '../../css/EditModal.module.css'
 
 interface Props {
-  field: FieldDetail
-  dropdownOptions?: string[]
+  provinceField: FieldDetail
+  districtField: FieldDetail
+  addressConfig: Record<string, string[]>
   onClose: () => void
   onSuccess: (fieldLabel: string, newVal: string) => void
   isOptionalUpload?: boolean
 }
 
-export default function EditModal({
-  field, dropdownOptions, onClose, onSuccess, isOptionalUpload = false
+export default function AddressPairModal({
+  provinceField,
+  districtField,
+  addressConfig,
+  onClose,
+  onSuccess,
+  isOptionalUpload = false,
 }: Props) {
   const { t } = useTranslation()
 
-  const [newVal, setNewVal] = useState(field.rawValue || '')
+  const [province, setProvince] = useState(provinceField.rawValue || '')
+  const [district, setDistrict] = useState(districtField.rawValue || '')
   const [fileData, setFileData] = useState<{ data: string; mimeType: string; name: string } | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const isDropdown = field.inputType === 'dropdown' && dropdownOptions && dropdownOptions.length > 0
-  const isDate = field.inputType === 'date'
+  const provinces = Object.keys(addressConfig)
+  const districts = province ? (addressConfig[province] || []) : []
+
+  const handleProvinceChange = (val: string) => {
+    setProvince(val)
+    setDistrict('')
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -55,21 +67,31 @@ export default function EditModal({
     e.preventDefault()
     setError('')
 
-    if (!newVal.trim()) return
+    if (!province || !district) {
+      setError(t('editModal.selectOption'))
+      return
+    }
+
+    const filePayload = fileData
+      ? { fileData: fileData.data, fileMimeType: fileData.mimeType, fileName: fileData.name }
+      : {}
 
     setLoading(true)
     try {
       await employeeApi.submitUpdateRequest({
-        fieldLabel: field.label,
-        newVal: newVal.trim(),
-        oldVal: field.value,
-        ...(fileData ? {
-          fileData: fileData.data,
-          fileMimeType: fileData.mimeType,
-          fileName: fileData.name,
-        } : {}),
+        fieldLabel: provinceField.label,
+        newVal: province,
+        oldVal: provinceField.value,
+        ...filePayload,
       })
-      onSuccess(field.label, newVal.trim())
+      await employeeApi.submitUpdateRequest({
+        fieldLabel: districtField.label,
+        newVal: district,
+        oldVal: districtField.value,
+        ...filePayload,
+      })
+      onSuccess(provinceField.label, province)
+      onSuccess(districtField.label, district)
       onClose()
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } }
@@ -89,44 +111,40 @@ export default function EditModal({
 
         <div className={styles.body}>
           <div className={styles.fieldInfo}>
-            <div className={styles.fieldLabel}>{t('editModal.field')}</div>
-            <div className={styles.fieldValue}>{field.label}</div>
-            <div className={styles.fieldLabel} style={{ marginTop: '0.5rem' }}>
-              {t('editModal.oldValue')}
-            </div>
-            <div className={styles.fieldValue}>{field.value || '—'}</div>
+            <div className={styles.fieldLabel}>{provinceField.label}</div>
+            <div className={styles.fieldValue}>{provinceField.value || '—'}</div>
+            <div className={styles.fieldLabel} style={{ marginTop: '0.5rem' }}>{districtField.label}</div>
+            <div className={styles.fieldValue}>{districtField.value || '—'}</div>
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
             <div className={styles.formGroup}>
-              <label className={styles.label}>{t('editModal.newValue')}</label>
-              {isDropdown ? (
-                <select
-                  className="input-field"
-                  value={newVal}
-                  onChange={(e) => setNewVal(e.target.value)}
-                >
-                  <option value="">{t('editModal.selectOption')}</option>
-                  {dropdownOptions!.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              ) : isDate ? (
-                <input
-                  className="input-field"
-                  type="date"
-                  value={newVal}
-                  onChange={(e) => setNewVal(e.target.value)}
-                />
-              ) : (
-                <input
-                  className="input-field"
-                  type="text"
-                  value={newVal}
-                  onChange={(e) => setNewVal(e.target.value)}
-                  placeholder={t('editModal.newValue')}
-                />
-              )}
+              <label className={styles.label}>{provinceField.label}</label>
+              <select
+                className="input-field"
+                value={province}
+                onChange={(e) => handleProvinceChange(e.target.value)}
+              >
+                <option value="">{t('editModal.selectOption')}</option>
+                {provinces.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>{districtField.label}</label>
+              <select
+                className="input-field"
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
+                disabled={!province}
+              >
+                <option value="">{t('editModal.selectOption')}</option>
+                {districts.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
             </div>
 
             {isOptionalUpload && (
@@ -152,7 +170,11 @@ export default function EditModal({
               <button type="button" className="btn-secondary" onClick={onClose}>
                 {t('editModal.cancel')}
               </button>
-              <button type="submit" className="btn-primary" disabled={loading || !newVal.trim()}>
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={loading || !province || !district}
+              >
                 {loading ? t('common.loading') : t('editModal.submit')}
               </button>
             </div>

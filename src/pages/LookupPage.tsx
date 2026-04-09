@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { adminApi, lookupApi } from '../api/employee'
 import { useAuth } from '../contexts/AuthContext'
 import type { CategoryPeriod, FeedbackState } from '../types'
@@ -24,7 +25,6 @@ export default function LookupPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const [tableData, setTableData] = useState<{ headers: string[]; rows: Record<string, string>[] } | null>(null)
-  const [tableLoading, setTableLoading] = useState(false)
 
   const [showUpload, setShowUpload] = useState(false)
   const [uploadCategoryName, setUploadCategoryName] = useState('')
@@ -49,7 +49,7 @@ export default function LookupPage() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!uploadCategoryName.trim() || !uploadFile) {
-      alert(t('lookupUpload.required'))
+      toast.error(t('lookupUpload.required'))
       return
     }
     setUploadLoading(true)
@@ -63,7 +63,7 @@ export default function LookupPage() {
       formData.append('isPriority', String(uploadIsPriority))
 
       await adminApi.uploadLookupFile(formData)
-      alert(t('lookupUpload.success'))
+      toast.success(t('lookupUpload.success'))
 
       setUploadCategoryName('')
       setUploadPeriod('')
@@ -76,7 +76,7 @@ export default function LookupPage() {
 
       loadCategories()
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setUploadLoading(false)
     }
@@ -121,7 +121,7 @@ export default function LookupPage() {
       await lookupApi.submitFeedback(categoryId, 'Xác nhận đúng', '')
       setFeedbacks((prev) => ({ ...prev, [categoryId]: { status: 'Xác nhận đúng', note: '' } }))
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setSubmitting(false)
     }
@@ -139,7 +139,7 @@ export default function LookupPage() {
       setRejectTarget(null)
       setRejectReason('')
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setSubmitting(false)
     }
@@ -157,7 +157,7 @@ export default function LookupPage() {
       setOptionTarget(null)
       setSelectedOption('')
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setSubmitting(false)
     }

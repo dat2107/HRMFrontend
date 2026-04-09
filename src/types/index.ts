@@ -34,8 +34,8 @@ export interface Profile {
 export interface FieldConfig {
   fieldName: string
   fieldKey?: string
-  isLocked?: boolean
-  isOptionalUpload?: boolean
+  locked?: boolean
+  optionalUpload?: boolean
   dropdownOptions?: string[]
 }
 

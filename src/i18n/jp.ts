@@ -142,6 +142,7 @@ const jp = {
     no: 'いいえ',
     search: '検索',
     noResult: '結果なし',
+    optional: '任意',
   },
   language: {
     vi: 'Tiếng Việt',

@@ -150,6 +150,7 @@ const vi = {
     no: 'Không',
     search: 'Tìm kiếm',
     noResult: 'Không có kết quả',
+    optional: 'Không bắt buộc',
   },
   // Language
   language: {

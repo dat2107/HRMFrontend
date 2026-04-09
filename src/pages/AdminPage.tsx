@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { adminApi } from '../api/employee'
 import type { UpdateRequest } from '../types'
 import { STATUS_FILTERS } from '../constants'
@@ -36,10 +37,10 @@ export default function AdminPage() {
     setActionLoading(id)
     try {
       await adminApi.approve(id)
-      alert(t('admin.approveSuccess'))
+      toast.success(t('admin.approveSuccess'))
       loadRequests()
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setActionLoading(null)
     }
@@ -55,11 +56,11 @@ export default function AdminPage() {
     setActionLoading(rejectModal.id)
     try {
       await adminApi.reject(rejectModal.id, rejectNote)
-      alert(t('admin.rejectSuccess'))
+      toast.success(t('admin.rejectSuccess'))
       setRejectModal(null)
       loadRequests()
     } catch (err: any) {
-      alert(err.response?.data?.message || t('common.error'))
+      toast.error(err.response?.data?.message || t('common.error'))
     } finally {
       setActionLoading(null)
     }
